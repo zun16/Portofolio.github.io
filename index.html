@@ -7,10 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
- <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
@@ -193,7 +190,7 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
+        
         /* Notification Badge */
         .notification-badge {
             position: absolute;
@@ -211,26 +208,38 @@
             color: white;
             animation: pulse 2s infinite;
         }
-
+        
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
-
+        
         /* Export/Import Panel */
         .data-panel {
             transition: all 0.3s ease;
         }
-
+        
         .data-panel.collapsed {
             height: 0;
             opacity: 0;
             overflow: hidden;
         }
-
+        
         .data-panel.expanded {
             height: auto;
             opacity: 1;
+        }
+        
+        /* Link Styles */
+        .external-link {
+            position: relative;
+        }
+        
+        .external-link::after {
+            content: '↗';
+            font-size: 0.8em;
+            margin-left: 2px;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -299,16 +308,16 @@
                     <!-- Data Management Button -->
                     <div class="relative">
                         <button @click="toggleDataPanel"
-                                class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center hover:scale-110 transition-all duration-300"
+                                class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center hover:scale-110 transition-transform duration-300"
                                 :title="`${totalItems} items in storage`">
                             <i class="fas fa-database"></i>
                             <span x-show="totalItems > 0" class="notification-badge" x-text="totalItems"></span>
                         </button>
                     </div>
-
+                    
                     <!-- Theme Toggle -->
                     <button @click="toggleTheme"
-                            class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center hover:scale-110 transition-all duration-300">
+                            class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center hover:scale-110 transition-transform duration-300">
                         <i class="fas fa-sun" x-show="!isDark"></i>
                         <i class="fas fa-moon" x-show="isDark"></i>
                     </button>
@@ -337,14 +346,14 @@
                     </template>
                 </div>
             </div>
-
+            
             <!-- Data Management Panel -->
             <div x-show="showDataPanel" x-transition
                  class="mt-4 p-4 rounded-2xl glass-effect data-panel"
                  :class="showDataPanel ? 'expanded' : 'collapsed'">
                 <div class="space-y-4">
                     <h3 class="font-bold text-lg gradient-text">Data Management</h3>
-
+                    
                     <div class="grid md:grid-cols-2 gap-4">
                         <!-- Import Data -->
                         <div class="space-y-3">
@@ -363,7 +372,7 @@
                                 <input type="file" id="jsonFileInput" @change="handleFileImport" accept=".json" class="hidden">
                             </div>
                         </div>
-
+                        
                         <!-- Export Data -->
                         <div class="space-y-3">
                             <h4 class="font-medium" :class="isDark ? 'text-slate-300' : 'text-slate-700'">Export Data</h4>
@@ -383,10 +392,10 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Stats -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t"
-                         :class="isDark ? 'border-slate-700' : 'border-slate-200'">
+                         :class="isDark ? 'border-t border-slate-700' : 'border-t border-slate-200'">
                         <div class="text-center">
                             <div class="text-lg font-bold gradient-text" x-text="skills.length"></div>
                             <div class="text-xs" :class="isDark ? 'text-slate-400' : 'text-slate-600'">Skills</div>
@@ -481,7 +490,7 @@
                             <span>Contact Me</span>
                         </button>
                     </div>
-
+                    
                     <!-- Storage Indicator -->
                     <div class="pt-8">
                         <div class="flex items-center space-x-3 text-sm"
@@ -497,7 +506,7 @@
                     <!-- Main Profile Image -->
                     <div class="relative w-96 h-96 mx-auto">
                         <div class="absolute inset-0 rounded-full overflow-hidden">
-                            <img src="WhatsApp Image 2026-01-22 at 09.06.42.jpeg"
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                                  alt="Profile"
                                  class="w-full h-full object-cover">
                         </div>
@@ -613,7 +622,7 @@
                                     <div class="text-xs" :class="isDark ? 'text-slate-400' : 'text-slate-600'">Projects</div>
                                 </div>
                             </div>
-
+                            
                             <!-- Edit Button -->
                             <div class="mt-4">
                                 <button @click="editSkill(skill)"
@@ -714,12 +723,36 @@
                                         :class="isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'">
                                     View Details
                                 </button>
-                                <button @click="editProject(project)"
-                                        class="px-4 py-2 rounded-lg text-sm"
-                                        :class="isDark ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
-                                    <i class="fas fa-edit mr-2"></i>
-                                    Edit
-                                </button>
+                                
+                                <div class="flex space-x-2">
+                                    <!-- Demo Link -->
+                                    <a :href="project.demoUrl" 
+                                       x-show="hasValidUrl(project.demoUrl)" 
+                                       target="_blank"
+                                       class="w-10 h-10 rounded-lg flex items-center justify-center glass-effect hover:scale-110 transition-transform external-link"
+                                       :class="isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'"
+                                       title="Live Demo">
+                                        <i class="fas fa-external-link-alt text-sm"></i>
+                                    </a>
+                                    
+                                    <!-- Source Code Link -->
+                                    <a :href="project.sourceUrl" 
+                                       x-show="hasValidUrl(project.sourceUrl)" 
+                                       target="_blank"
+                                       class="w-10 h-10 rounded-lg flex items-center justify-center glass-effect hover:scale-110 transition-transform external-link"
+                                       :class="isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'"
+                                       title="Source Code">
+                                        <i class="fab fa-github text-sm"></i>
+                                    </a>
+                                    
+                                    <!-- Edit Button -->
+                                    <button @click="editProject(project)"
+                                            class="w-10 h-10 rounded-lg flex items-center justify-center"
+                                            :class="isDark ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+                                            title="Edit Project">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -796,8 +829,9 @@
                         <div class="flex space-x-4">
                             <template x-for="social in socialLinks" :key="social.name">
                                 <a :href="social.url" target="_blank"
-                                   class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center hover:scale-110 transition-transform duration-300"
-                                   :class="isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'">
+                                   class="w-12 h-12 rounded-xl glass-effect flex items-center justify-center hover:scale-110 transition-transform duration-300 external-link"
+                                   :class="isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'"
+                                   :title="'Visit ' + social.name">
                                     <i :class="social.icon" class="text-lg"></i>
                                 </a>
                             </template>
@@ -877,7 +911,7 @@
                     <p class="text-xs mt-2" :class="isDark ? 'text-slate-500' : 'text-slate-500'">
                         Experience: Since 2023 (<span x-text="totalExperienceYears"></span> years)
                     </p>
-
+                    
                     <p class="text-xs mt-1" :class="isDark ? 'text-slate-500' : 'text-slate-500'">
                         Data stored locally in your browser
                     </p>
@@ -973,8 +1007,11 @@
                                     Project Links
                                 </h4>
                                 <div class="space-y-3">
-                                    <a :href="selectedProject.demoUrl" x-show="selectedProject.demoUrl" target="_blank"
-                                       class="flex items-center justify-between p-4 rounded-xl hover:scale-105 transition-transform duration-300"
+                                    <!-- Live Demo Link -->
+                                    <a :href="selectedProject.demoUrl" 
+                                       x-show="hasValidUrl(selectedProject.demoUrl)" 
+                                       target="_blank"
+                                       class="flex items-center justify-between p-4 rounded-xl hover:scale-105 transition-transform duration-300 external-link"
                                        :class="isDark ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
                                         <div class="flex items-center space-x-3">
                                             <div class="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -983,13 +1020,17 @@
                                             </div>
                                             <div>
                                                 <p class="font-medium">Live Demo</p>
+                                                <p class="text-xs opacity-75 line-clamp-1" x-text="selectedProject.demoUrl"></p>
                                             </div>
                                         </div>
                                         <i class="fas fa-arrow-right"></i>
                                     </a>
-
-                                    <a :href="selectedProject.sourceUrl" x-show="selectedProject.sourceUrl" target="_blank"
-                                       class="flex items-center justify-between p-4 rounded-xl hover:scale-105 transition-transform duration-300"
+                                    
+                                    <!-- Source Code Link -->
+                                    <a :href="selectedProject.sourceUrl" 
+                                       x-show="hasValidUrl(selectedProject.sourceUrl)" 
+                                       target="_blank"
+                                       class="flex items-center justify-between p-4 rounded-xl hover:scale-105 transition-transform duration-300 external-link"
                                        :class="isDark ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
                                         <div class="flex items-center space-x-3">
                                             <div class="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -998,10 +1039,19 @@
                                             </div>
                                             <div>
                                                 <p class="font-medium">Source Code</p>
+                                                <p class="text-xs opacity-75 line-clamp-1" x-text="selectedProject.sourceUrl"></p>
                                             </div>
                                         </div>
                                         <i class="fas fa-arrow-right"></i>
                                     </a>
+                                    
+                                    <!-- No Links Message -->
+                                    <div x-show="!hasValidUrl(selectedProject.demoUrl) && !hasValidUrl(selectedProject.sourceUrl)"
+                                         class="p-4 rounded-xl text-center"
+                                         :class="isDark ? 'bg-slate-700/50 text-slate-400' : 'bg-slate-100 text-slate-600'">
+                                        <i class="fas fa-link text-lg mb-2"></i>
+                                        <p>No links available for this project</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1218,7 +1268,7 @@
                                 </button>
                             </template>
                         </div>
-
+                        
                         <!-- Custom Technology Input -->
                         <div class="flex gap-2">
                             <input type="text" x-model="customTech"
@@ -1243,7 +1293,7 @@
                             <input type="url" x-model="newProject.demoUrl"
                                    class="w-full px-4 py-3 rounded-xl"
                                    :class="isDark ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-900'"
-                                   placeholder="https://">
+                                   placeholder="https://example.com">
                         </div>
 
                         <div>
@@ -1254,7 +1304,7 @@
                             <input type="url" x-model="newProject.sourceUrl"
                                    class="w-full px-4 py-3 rounded-xl"
                                    :class="isDark ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-900'"
-                                   placeholder="https://github.com/">
+                                   placeholder="https://github.com/username/project">
                         </div>
                     </div>
 
@@ -1357,10 +1407,26 @@
                 },
 
                 socialLinks: [
-                    { name: 'github', icon: 'fab fa-github', url: 'https://github.com/qorqr' },
-  { name: 'whatsapp', icon: 'fab fa-whatsapp', url: 'https://wa.me/6282295692941' },
-  { name: 'instagram', icon: 'fab fa-instagram', url: 'https://www.instagram.com/clzun._' },
-  { name: 'tiktok', icon: 'fab fa-tiktok', url: 'https://tiktok.com/@https://www.tiktok.com/@zuyyinafirdausi0' }
+                    { 
+                        name: 'github', 
+                        icon: 'fab fa-github', 
+                        url: 'https://github.com' 
+                    },
+                    { 
+                        name: 'linkedin', 
+                        icon: 'fab fa-linkedin', 
+                        url: 'https://linkedin.com' 
+                    },
+                    { 
+                        name: 'twitter', 
+                        icon: 'fab fa-twitter', 
+                        url: 'https://twitter.com' 
+                    },
+                    { 
+                        name: 'instagram', 
+                        icon: 'fab fa-instagram', 
+                        url: 'https://instagram.com' 
+                    }
                 ],
 
                 defaultTechnologies: [
@@ -1508,8 +1574,18 @@
                             type: 'api',
                             technologies: ['Node.js', 'Express', 'JWT', 'Redis', 'Docker', 'Kubernetes'],
                             image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                            demoUrl: 'https://api.devport.com',
+                            demoUrl: '',
                             sourceUrl: 'https://github.com/devport/api-gateway'
+                        },
+                        {
+                            id: 4,
+                            name: 'Portfolio Website',
+                            description: 'Modern responsive portfolio website built with Alpine.js and Tailwind CSS. Features dark mode and localStorage integration.',
+                            type: 'web',
+                            technologies: ['HTML', 'CSS', 'JavaScript', 'Alpine.js', 'Tailwind CSS'],
+                            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                            demoUrl: 'https://yourusername.github.io',
+                            sourceUrl: 'https://github.com/yourusername/portfolio'
                         }
                     ];
                 },
@@ -1611,6 +1687,12 @@
                     return this.skills.filter(skill => skill.category === category).length;
                 },
 
+                hasValidUrl(url) {
+                    if (!url || url.trim() === '') return false;
+                    // Cek jika URL valid (dimulai dengan http:// atau https://)
+                    return url.startsWith('http://') || url.startsWith('https://');
+                },
+
                 // Skill Methods
                 addNewSkill() {
                     if (!this.newSkill.name.trim()) {
@@ -1665,7 +1747,7 @@
                             projects: parseInt(this.newSkill.projects) || 0,
                             icon: this.getCategoryIcon(this.newSkill.category)
                         };
-
+                        
                         this.saveToStorage();
                         this.showToastMessage('Skill updated successfully!', 'success');
                         this.resetNewSkillForm();
@@ -1755,7 +1837,7 @@
                             demoUrl: this.newProject.demoUrl.trim(),
                             sourceUrl: this.newProject.sourceUrl.trim()
                         };
-
+                        
                         this.saveToStorage();
                         this.showToastMessage('Project updated successfully!', 'success');
                         this.resetNewProjectForm();
@@ -1818,7 +1900,7 @@
 
                     // Simulate sending message
                     this.showToastMessage('Message sent successfully! (Simulated - check browser console)', 'success');
-
+                    
                     // Log to console
                     console.log('Contact Form Submission:', this.contactForm);
 
@@ -1852,7 +1934,7 @@
                     reader.onload = (e) => {
                         try {
                             const data = JSON.parse(e.target.result);
-
+                            
                             if (data.skills && data.projects) {
                                 this.skills = data.skills;
                                 this.projects = data.projects;
@@ -1866,7 +1948,7 @@
                         }
                     };
                     reader.readAsText(file);
-
+                    
                     // Reset input
                     event.target.value = '';
                 },
@@ -1880,14 +1962,14 @@
 
                     const dataStr = JSON.stringify(data, null, 2);
                     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-
+                    
                     const exportFileDefaultName = `portfolio-backup-${new Date().toISOString().split('T')[0]}.json`;
-
+                    
                     const linkElement = document.createElement('a');
                     linkElement.setAttribute('href', dataUri);
                     linkElement.setAttribute('download', exportFileDefaultName);
                     linkElement.click();
-
+                    
                     this.showToastMessage('Data exported successfully!', 'success');
                 },
 
@@ -1911,7 +1993,7 @@
                 closeModal(modalName) {
                     this.modals[modalName] = false;
                     document.body.style.overflow = '';
-
+                    
                     // Reset forms when closing
                     if (modalName === 'addSkill') {
                         this.resetNewSkillForm();
